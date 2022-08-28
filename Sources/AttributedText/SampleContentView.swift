@@ -22,9 +22,9 @@ public struct SampleContentView: View {
     NavigationStack(path: $path) {
       AttributedText(text: text ) { (url, query) in
         switch url.scheme {
-          case (URLScheme.urlAction.link! as URL).scheme: openURL(URL(string: query)!)
-          case (URLScheme.hashtagAction.link! as URL).scheme: path.append(ViewData(text: query, type: .hashtag))
-          case (URLScheme.mentionAction.link! as URL).scheme: path.append(ViewData(text: query, type: .mention))
+          case (URLSchemeAction.urlAction.link! as URL).scheme: openURL(URL(string: query)!)
+          case (URLSchemeAction.hashtagAction.link! as URL).scheme: path.append(ViewData(text: query, type: .hashtag))
+          case (URLSchemeAction.mentionAction.link! as URL).scheme: path.append(ViewData(text: query, type: .mention))
 
           default: fatalError()
         }
@@ -43,15 +43,15 @@ extension AttributedText {
   init(text: String, action: @escaping OpenURLAction) {
     self.init(
       text: text,
-      urlAction: URLScheme.urlAction,
-      hashtagAction: URLScheme.hashtagAction,
-      mentionAction: URLScheme.mentionAction,
+      urlAction: URLSchemeAction.urlAction,
+      hashtagAction: URLSchemeAction.hashtagAction,
+      mentionAction: URLSchemeAction.mentionAction,
       action: action
     )
   }
 }
 
-struct URLScheme {
+struct URLSchemeAction {
   static var urlAction: AttributeContainer {
     var container = AttributeContainer()
     container.link = URL(string: "testApp-url://")
