@@ -24,7 +24,7 @@ public struct SampleContentView: View {
         switch url.scheme {
           case URLScheme.urlAction.url.scheme: openURL(URL(string: query)!)
           case URLScheme.hashtagAction.url.scheme: path.append(ViewData(text: query, type: .hashtag))
-          case URLScheme.hashtagAction.url.scheme: path.append(ViewData(text: query, type: .mention))
+          case URLScheme.mentionAction.url.scheme: path.append(ViewData(text: query, type: .mention))
 
           default: fatalError()
         }
