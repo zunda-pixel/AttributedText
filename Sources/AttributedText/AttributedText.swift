@@ -9,15 +9,15 @@ import RegexBuilder
 public struct AttributedText: View {
   let text: String
 
-  let urlAction: AttributedAction
-  let hashtagAction: AttributedAction
-  let mentionAction: AttributedAction
+  let urlAction: AttributeContainer
+  let hashtagAction: AttributeContainer
+  let mentionAction: AttributeContainer
 
   let action: OpenURLAction
 
   public typealias OpenURLAction = (_ url: URL, _ query: String) -> Void
 
-  public init(text: String, urlAction: AttributedAction, hashtagAction: AttributedAction, mentionAction: AttributedAction, action: @escaping OpenURLAction) {
+  public init(text: String, urlAction: AttributeContainer, hashtagAction: AttributeContainer, mentionAction: AttributeContainer, action: @escaping OpenURLAction) {
     self.text = text
     self.urlAction = urlAction
     self.hashtagAction = hashtagAction
@@ -56,7 +56,7 @@ public struct AttributedText: View {
       let ranges = attributedText.matchAll(stringValue)
 
       for range in ranges {
-        let action: AttributedAction
+        var action: AttributeContainer
 
         if stringValue.wholeMatch(of: urlRegex) != nil {
           action = urlAction
@@ -71,11 +71,13 @@ public struct AttributedText: View {
           fatalError()
         }
 
-        var url = action.url
         let value = String(attributedText.characters[range])
-        url.append(queryItems: [.init(name: "query", value: value)])
-        attributedText[range].link = url
-        attributedText[range].foregroundColor = action.color
+
+        var url = action.link as URL?
+        url?.append(queryItems: [.init(name: "query", value: value)])
+        action.link = url
+
+        attributedText[range].setAttributes(action)
       }
     }
 
@@ -90,9 +92,4 @@ public struct AttributedText: View {
         action(url, query)
       }
   }
-}
-
-public struct AttributedAction {
-  let url: URL
-  let color: Color
 }

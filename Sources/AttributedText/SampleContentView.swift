@@ -22,9 +22,9 @@ public struct SampleContentView: View {
     NavigationStack(path: $path) {
       AttributedText(text: text ) { (url, query) in
         switch url.scheme {
-          case URLScheme.urlAction.url.scheme: openURL(URL(string: query)!)
-          case URLScheme.hashtagAction.url.scheme: path.append(ViewData(text: query, type: .hashtag))
-          case URLScheme.mentionAction.url.scheme: path.append(ViewData(text: query, type: .mention))
+          case (URLScheme.urlAction.link! as URL).scheme: openURL(URL(string: query)!)
+          case (URLScheme.hashtagAction.link! as URL).scheme: path.append(ViewData(text: query, type: .hashtag))
+          case (URLScheme.mentionAction.link! as URL).scheme: path.append(ViewData(text: query, type: .mention))
 
           default: fatalError()
         }
@@ -52,9 +52,26 @@ extension AttributedText {
 }
 
 struct URLScheme {
-  static let urlAction: AttributedAction = .init(url: .init(string: "testApp-url://")!, color: .blue)
-  static let hashtagAction: AttributedAction = .init(url: .init(string: "testApp-hashtag://")!, color: .red)
-  static let mentionAction: AttributedAction = .init(url: .init(string: "testApp-mention://")!, color: .green)
+  static var urlAction: AttributeContainer {
+    var container = AttributeContainer()
+    container.link = URL(string: "testApp-url://")
+    container.foregroundColor = .blue
+    return container
+  }
+
+  static var hashtagAction: AttributeContainer {
+    var container = AttributeContainer()
+    container.link = URL(string: "testApp-hashtag://")
+    container.foregroundColor = .red
+    return container
+  }
+
+  static var mentionAction: AttributeContainer {
+    var container = AttributeContainer()
+    container.link = URL(string: "testApp-mention://")
+    container.foregroundColor = .green
+    return container
+  }
 }
 
 struct ViewData: Codable, Hashable {
