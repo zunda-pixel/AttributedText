@@ -14,7 +14,7 @@ public struct SampleContentView: View {
 
   let text: String
 
-  public init(text: String = "url https://www.swift.org hashtag #Swift mention @Swift") {
+  public init(text: String = "url https://www.swift.org/getting-started/ hashtag #Swift mention @Swift") {
     self.text = text
   }
 
