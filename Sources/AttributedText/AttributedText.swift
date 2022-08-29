@@ -13,16 +13,11 @@ public struct AttributedText: View {
   let hashtagAction: AttributeContainer
   let mentionAction: AttributeContainer
 
-  let action: OpenURLAction
-
-  public typealias OpenURLAction = (_ url: URL, _ query: String?) -> Void
-
-  public init(text: String, urlAction: AttributeContainer, hashtagAction: AttributeContainer, mentionAction: AttributeContainer, action: @escaping OpenURLAction) {
+  public init(text: String, urlAction: AttributeContainer, hashtagAction: AttributeContainer, mentionAction: AttributeContainer) {
     self.text = text
     self.urlAction = urlAction
     self.hashtagAction = hashtagAction
     self.mentionAction = mentionAction
-    self.action = action
   }
 
   let urlRegex: some RegexComponent = Regex {
@@ -86,9 +81,5 @@ public struct AttributedText: View {
 
   public var body: some View {
     Text(attributedText)
-      .onOpenURL { url in
-        let query = url.queryItems.first(where: { $0.name == "query" })?.value
-        action(url, query)
-      }
   }
 }

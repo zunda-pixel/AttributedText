@@ -20,33 +20,37 @@ public struct SampleContentView: View {
 
   public var body: some View {
     NavigationStack(path: $path) {
-      AttributedText(text: text ) { (url, query) in
-        switch url.scheme {
-          case (URLSchemeAction.urlAction.link! as URL).scheme: openURL(URL(string: query!)!)
-          case (URLSchemeAction.hashtagAction.link! as URL).scheme: path.append(ViewData(text: query!, type: .hashtag))
-          case (URLSchemeAction.mentionAction.link! as URL).scheme: path.append(ViewData(text: query!, type: .mention))
+      AttributedText(text: text )
+    }
+    .onOpenURL { url in
+      let query = url.queryItems.first { $0.name == "query" }?.value
 
-          default: fatalError()
-        }
+      guard let query else { return }
+
+      switch url.scheme {
+        case (URLSchemeAction.urlAction.link! as URL).scheme: openURL(URL(string: query)!)
+        case (URLSchemeAction.hashtagAction.link! as URL).scheme: path.append(ViewData(text: query, type: .hashtag))
+        case (URLSchemeAction.mentionAction.link! as URL).scheme: path.append(ViewData(text: query, type: .mention))
+
+        default: fatalError()
       }
-      .navigationDestination(for: ViewData.self) { viewData in
-        switch viewData.type {
-          case .hashtag: HashtagView(hashtag: viewData.text).navigationTitle("Hashtag")
-          case .mention: MentionView(mention: viewData.text).navigationTitle("Mention")
-        }
+    }
+    .navigationDestination(for: ViewData.self) { viewData in
+      switch viewData.type {
+        case .hashtag: HashtagView(hashtag: viewData.text).navigationTitle("Hashtag")
+        case .mention: MentionView(mention: viewData.text).navigationTitle("Mention")
       }
     }
   }
 }
 
 extension AttributedText {
-  init(text: String, action: @escaping OpenURLAction) {
+  init(text: String) {
     self.init(
       text: text,
       urlAction: URLSchemeAction.urlAction,
       hashtagAction: URLSchemeAction.hashtagAction,
-      mentionAction: URLSchemeAction.mentionAction,
-      action: action
+      mentionAction: URLSchemeAction.mentionAction
     )
   }
 }
