@@ -15,7 +15,7 @@ public struct AttributedText: View {
 
   let action: OpenURLAction
 
-  public typealias OpenURLAction = (_ url: URL, _ query: String) -> Void
+  public typealias OpenURLAction = (_ url: URL, _ query: String?) -> Void
 
   public init(text: String, urlAction: AttributeContainer, hashtagAction: AttributeContainer, mentionAction: AttributeContainer, action: @escaping OpenURLAction) {
     self.text = text
@@ -87,8 +87,7 @@ public struct AttributedText: View {
   public var body: some View {
     Text(attributedText)
       .onOpenURL { url in
-        let query = url.queryItems.first { $0.name == "query" }!.value!
-
+        let query = url.queryItems.first(where: { $0.name == "query" })?.value
         action(url, query)
       }
   }
