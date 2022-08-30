@@ -23,7 +23,7 @@ extension AttributedStringProtocol {
 }
 
 extension AttributedString {
-  func addingURL(container: AttributeContainer) -> AttributedString {
+  func addingURL(container: AttributeContainer) -> Self {
     var attributedString = self
 
     let regex = Regex {
@@ -38,16 +38,20 @@ extension AttributedString {
       let ranges = attributedString.matchAll(stringValue)
 
       for range in ranges {
-        var con = container
-        con.link = URL(string: stringValue)!
-        attributedString[range].setAttributes(con)
+        var url = container.link as URL?
+        url?.append(queryItems: [.init(name: "query", value: stringValue)])
+
+        var container = container
+        container.link = url
+
+        attributedString[range].setAttributes(container)
       }
     }
 
     return attributedString
   }
 
-  func addingPrefixLink(prefixes: [String: AttributeContainer]) -> AttributedString {
+  func addingPrefixLink(prefixes: [String: AttributeContainer]) -> Self {
     var attributedString = self
 
     for (prefix, container) in prefixes {
@@ -65,11 +69,11 @@ extension AttributedString {
         let ranges = attributedString.matchAll(stringValue)
 
         for range in ranges {
-          var con = container
+          var container = container
           var url = container.link as URL?
           url?.append(queryItems: [.init(name: "query", value: stringValue)])
-          con.link = url
-          attributedString[range].setAttributes(con)
+          container.link = url
+          attributedString[range].setAttributes(container)
         }
       }
     }
