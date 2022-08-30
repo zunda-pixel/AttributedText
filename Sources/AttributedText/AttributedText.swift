@@ -7,7 +7,7 @@ import SwiftUI
 import RegexBuilder
 
 public struct AttributedText: View {
-  init(text: String, prefixes: [String : AttributeContainer], urlContainer: AttributeContainer) {
+  public init(text: String, prefixes: [String : AttributeContainer], urlContainer: AttributeContainer) {
     self.attributedText = AttributedString(text).addingURL(container: urlContainer).addingPrefixLink(prefixes: prefixes)
   }
 
