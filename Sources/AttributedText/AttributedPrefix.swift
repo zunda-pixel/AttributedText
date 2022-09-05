@@ -2,7 +2,6 @@
 // AttributedPrefix.swift
 //
 
-
 import Foundation
 
 public struct AttributedPrefix {

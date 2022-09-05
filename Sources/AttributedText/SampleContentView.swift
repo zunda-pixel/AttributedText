@@ -2,7 +2,6 @@
 // SampleContentView.swift
 //
 
-
 import SwiftUI
 
 public struct SampleContentView: View {
@@ -20,19 +19,19 @@ public struct SampleContentView: View {
         let viewItem = ViewData(text: query, type: .init(rawValue: prefixString)!)
         path.append(viewItem)
       }
-        .navigationDestination(for: ViewData.self) { viewData in
-          switch viewData.type {
-            case .hashtag: HashtagView(hashtag: viewData.text).navigationTitle("Hashtag")
-            case .mention: MentionView(mention: viewData.text).navigationTitle("Mention")
-            case .and: AndView(and: viewData.text).navigationTitle("And")
-          }
+      .navigationDestination(for: ViewData.self) { viewData in
+        switch viewData.type {
+        case .hashtag: HashtagView(hashtag: viewData.text).navigationTitle("Hashtag")
+        case .mention: MentionView(mention: viewData.text).navigationTitle("Mention")
+        case .and: AndView(and: viewData.text).navigationTitle("And")
         }
+      }
     }
   }
 }
 
 extension AttributedText {
-  init(text: String, action: @escaping (String, String) -> Void ) {
+  init(text: String, action: @escaping (String, String) -> Void) {
     self.init(
       text: text,
       prefixes: [

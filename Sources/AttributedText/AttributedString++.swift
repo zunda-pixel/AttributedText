@@ -2,17 +2,20 @@
 // AttributedStringProtocol++.swift
 //
 
-
 import Foundation
 import RegexBuilder
 
 extension AttributedStringProtocol {
-  func match(_ pattern: String, options: String.CompareOptions? = nil) -> Range<AttributedString.Index>? {
+  func match(_ pattern: String, options: String.CompareOptions? = nil) -> Range<
+    AttributedString.Index
+  >? {
     let options = options?.union(.regularExpression) ?? .regularExpression
     return self.range(of: pattern, options: options)
   }
 
-  func matchAll(_ pattern: String, options: String.CompareOptions? = nil) -> [Range<AttributedString.Index>] {
+  func matchAll(_ pattern: String, options: String.CompareOptions? = nil) -> [Range<
+    AttributedString.Index
+  >] {
     guard let range = match(pattern, options: options) else {
       return []
     }
@@ -61,7 +64,10 @@ extension AttributedString {
 
       for match in text.matches(of: regex) {
         let stringValue = String(match.0)
-        guard item.prefix.startIndex <= stringValue.endIndex && item.prefix.endIndex <= stringValue.endIndex  else { continue }
+        guard
+          item.prefix.startIndex <= stringValue.endIndex
+            && item.prefix.endIndex <= stringValue.endIndex
+        else { continue }
 
         let ranges = attributedString.matchAll(stringValue)
 
@@ -80,5 +86,3 @@ extension AttributedString {
     return attributedString
   }
 }
-
-
