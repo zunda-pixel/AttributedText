@@ -1,0 +1,31 @@
+name: Format
+
+on: push
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: swift-actions/setup-swift@v1
+    - name: Format And Lint
+      run: |
+        swift run -c release swift-format format Sources Tests -r -i -p
+        swift run -c release swift-format lint Sources Tests -r -p  -s
+    - name: Git Setting
+      run: |
+        git config --global user.email "swift-formatter[bot]@swift.com"
+        git config --global user.name "swift-formatter"
+    - name: Check diff
+      id: diff
+      run: |
+        git add -N .
+        git diff --name-only --exit-code
+      continue-on-error: true
+    - name: Commit And Push
+      run: |
+        git add .
+        git commit -m "swift-format"
+        git push
+      if: steps.diff.outcome == 'failure'
