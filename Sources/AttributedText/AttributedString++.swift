@@ -51,12 +51,12 @@ extension AttributedString {
     return attributedString
   }
 
-  func addingPrefixLink(prefixes: [String: AttributeContainer]) -> Self {
+  func addingPrefixLink(prefixes: [AttributedPrefix]) -> Self {
     var attributedString = self
 
-    for (prefix, container) in prefixes {
+    for item in prefixes {
       let regex = Regex {
-        prefix
+        item.prefix
         OneOrMore(.word)
       }
 
@@ -64,7 +64,7 @@ extension AttributedString {
 
       for match in text.matches(of: regex) {
         let stringValue = String(match.0)
-        guard prefix.startIndex <= stringValue.endIndex && prefix.endIndex <= stringValue.endIndex  else { continue }
+        guard item.prefix.startIndex <= stringValue.endIndex && item.prefix.endIndex <= stringValue.endIndex  else { continue }
 
         let ranges = attributedString.matchAll(stringValue)
 
