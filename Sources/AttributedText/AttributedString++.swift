@@ -66,10 +66,12 @@ extension AttributedString {
         let ranges = attributedString.matchAll(stringValue)
 
         for range in ranges {
-          var container = container
-          var url = container.link as URL?
-          url?.append(queryItems: [.init(name: "query", value: stringValue)])
+          var url = AttributedText.attributedURL
+          url.append(queryItems: [.init(name: "query", value: stringValue)])
+
+          var container = item.container
           container.link = url
+
           attributedString[range].setAttributes(container)
         }
       }
