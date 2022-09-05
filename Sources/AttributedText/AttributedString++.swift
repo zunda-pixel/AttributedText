@@ -6,22 +6,18 @@ import Foundation
 import RegexBuilder
 
 extension AttributedStringProtocol {
-  func match(_ pattern: String, options: String.CompareOptions? = nil) -> Range<
-    AttributedString.Index
-  >? {
+  func range(_ pattern: String, options: String.CompareOptions? = nil) -> Range<AttributedString.Index>? {
     let options = options?.union(.regularExpression) ?? .regularExpression
     return self.range(of: pattern, options: options)
   }
 
-  func matchAll(_ pattern: String, options: String.CompareOptions? = nil) -> [Range<
-    AttributedString.Index
-  >] {
-    guard let range = match(pattern, options: options) else {
+  func ranges(_ pattern: String, options: String.CompareOptions? = nil) -> [Range<AttributedString.Index>] {
+    guard let range = range(pattern, options: options) else {
       return []
     }
 
     let remaining = self[range.upperBound...]
-    return [range] + remaining.matchAll(pattern, options: options)
+    return [range] + remaining.ranges(pattern, options: options)
   }
 }
 
@@ -38,7 +34,7 @@ extension AttributedString {
     for match in text.matches(of: regex) {
       let stringValue = String(match.0)
 
-      let ranges = attributedString.matchAll(stringValue)
+      let ranges = attributedString.ranges(stringValue)
 
       for range in ranges {
         var container = container
@@ -69,7 +65,7 @@ extension AttributedString {
             && item.prefix.endIndex <= stringValue.endIndex
         else { continue }
 
-        let ranges = attributedString.matchAll(stringValue)
+        let ranges = attributedString.ranges(stringValue)
 
         for range in ranges {
           var url = AttributedText.attributedURL
