@@ -38,11 +38,8 @@ extension AttributedString {
       let ranges = attributedString.matchAll(stringValue)
 
       for range in ranges {
-        var url = container.link as URL?
-        url?.append(queryItems: [.init(name: "query", value: stringValue)])
-
         var container = container
-        container.link = url
+        container.link = URL(string: stringValue)!
 
         attributedString[range].setAttributes(container)
       }
