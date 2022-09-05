@@ -8,19 +8,18 @@ import SwiftUI
 public struct SampleContentView: View {
   @State var path = NavigationPath()
 
-  @Environment(\.openURL) var openURL
-
-  @State var viewItem: ViewData?
-
   let text: String
 
-  public init(text: String = "url https://www.swift.org/getting-started/ hashtag #Swift mention @Swift &swift") {
+  public init(text: String) {
     self.text = text
   }
 
   public var body: some View {
     NavigationStack(path: $path) {
-      AttributedText(text: text)
+      AttributedText(text: text) { (prefixString, query) in
+        let viewItem = ViewData(text: query, type: .init(rawValue: prefixString)!)
+        path.append(viewItem)
+      }
         .navigationDestination(for: ViewData.self) { viewData in
           switch viewData.type {
             case .hashtag: HashtagView(hashtag: viewData.text).navigationTitle("Hashtag")
@@ -29,64 +28,51 @@ public struct SampleContentView: View {
           }
         }
     }
-    .onOpenURL { url in
-      let query = url.queryItems.first { $0.name == "query" }?.value
-
-      guard let query else { return }
-
-      switch url.scheme {
-        case (URLSchemeAction.hashtagAction.link! as URL).scheme: path.append(ViewData(text: query, type: .hashtag))
-        case (URLSchemeAction.mentionAction.link! as URL).scheme: path.append(ViewData(text: query, type: .mention))
-        case (URLSchemeAction.andAction.link! as URL).scheme:
-          path.append(ViewData(text: query, type: .and))
-        default: fatalError()
-      }
-    }
   }
 }
 
 extension AttributedText {
-  init(text: String) {
+  init(text: String, action: @escaping (String, String) -> Void ) {
     self.init(
       text: text,
       prefixes: [
-        "&": URLSchemeAction.andAction,
-        "@": URLSchemeAction.mentionAction,
-        "#": URLSchemeAction.hashtagAction,
+        .init(prefix: "@", container: PrefixContainer.mentionContainer),
+        .init(prefix: "#", container: PrefixContainer.hashtagContainer),
+        .init(prefix: "&", container: PrefixContainer.andContainer),
       ],
-      urlContainer: AttributeContainer.foregroundColor(.blue)
+      urlContainer: AttributeContainer.foregroundColor(.blue),
+      action: action
     )
   }
 }
 
-struct URLSchemeAction {
-  static var andAction: AttributeContainer {
+struct PrefixContainer {
+  static var andContainer: AttributeContainer {
     var container = AttributeContainer()
-    container.link = URL(string: "testApp-and://")
-    container.foregroundColor = .yellow
+    container.foregroundColor = .orange
     return container
   }
 
-  static var hashtagAction: AttributeContainer {
+  static var hashtagContainer: AttributeContainer {
     var container = AttributeContainer()
-    container.link = URL(string: "testApp-hashtag://")
     container.foregroundColor = .red
+    container.underlineStyle = .single
     return container
   }
 
-  static var mentionAction: AttributeContainer {
+  static var mentionContainer: AttributeContainer {
     var container = AttributeContainer()
-    container.link = URL(string: "testApp-mention://")
     container.foregroundColor = .green
+    container.font = .largeTitle
     return container
   }
 }
 
 struct ViewData: Codable, Hashable {
-  enum ViewType: Codable {
-    case hashtag
-    case mention
-    case and
+  enum ViewType: String, Codable {
+    case hashtag = "#"
+    case mention = "@"
+    case and = "&"
   }
 
   let text: String
@@ -119,6 +105,6 @@ struct AndView: View {
 
 struct SampleContentView_Previews: PreviewProvider {
   static var previews: some View {
-    SampleContentView()
+    SampleContentView(text: "url https://www.swift.org/ hashtag #Swift mention @Swift &swift")
   }
 }
