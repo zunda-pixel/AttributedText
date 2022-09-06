@@ -38,8 +38,9 @@ extension AttributedString {
 
       for range in ranges {
         var container = container
-        container.link = URL(string: stringValue)!
-
+        if let url = URL(string: stringValue) {
+          container.link = url
+        }
         attributedString[range].setAttributes(container)
       }
     }
