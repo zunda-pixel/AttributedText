@@ -1,5 +1,8 @@
 # AttributedText
 
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fzunda-pixel%2FAttributedText%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/zunda-pixel/AttributedText)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fzunda-pixel%2FAttributedText%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/zunda-pixel/AttributedText)
+
 `AttributedText` is Custom Action `AttributedString`
 
 <img width="250" src="https://user-images.githubusercontent.com/47569369/187081320-e41ac170-5842-462c-8c9e-b78c50780a0a.gif">
