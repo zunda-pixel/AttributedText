@@ -48,6 +48,7 @@ extension AttributedString {
     return attributedString
   }
 
+  @MainActor
   func addingPrefixLink(prefixes: [AttributedPrefix]) -> Self {
     var attributedString = self
 
