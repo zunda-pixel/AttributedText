@@ -12,7 +12,7 @@ public struct AttributedText: View {
 
   let prefixAction: (String, String) -> Void
   let urlAction: ((URL) -> Void)?
-  
+
   public init(
     text: String,
     prefixes: [AttributedPrefix],
@@ -63,12 +63,14 @@ public struct AttributedText: View {
 }
 
 #Preview {
-  Preview(text: """
-url https://swift.org/
-hashtag #Swift
-mention @Swift
-and &swift
-""")
+  Preview(
+    text: """
+      url https://swift.org/
+      hashtag #Swift
+      mention @Swift
+      and &swift
+      """
+  )
   .frame(maxWidth: 500, maxHeight: 500)
 }
 
@@ -115,7 +117,6 @@ public struct Preview: View {
     }
   }
 }
-
 
 struct HashtagView: View {
   let hashtag: String
@@ -176,7 +177,7 @@ struct ViewData: Codable, Hashable {
 
 struct WebView: View {
   let url: URL
-  
+
   var body: some View {
     Text(url.absoluteString)
   }

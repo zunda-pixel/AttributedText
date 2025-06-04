@@ -6,12 +6,18 @@ import Foundation
 import RegexBuilder
 
 extension AttributedStringProtocol {
-  func range(_ pattern: String, options: String.CompareOptions? = nil) -> Range<AttributedString.Index>? {
+  func range(
+    _ pattern: String,
+    options: String.CompareOptions? = nil
+  ) -> Range<AttributedString.Index>? {
     let options = options?.union(.regularExpression) ?? .regularExpression
     return self.range(of: pattern, options: options)
   }
 
-  func ranges(_ pattern: String, options: String.CompareOptions? = nil) -> [Range<AttributedString.Index>] {
+  func ranges(
+    _ pattern: String,
+    options: String.CompareOptions? = nil
+  ) -> [Range<AttributedString.Index>] {
     guard let range = range(pattern, options: options) else {
       return []
     }
